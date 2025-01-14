@@ -1,6 +1,6 @@
 """
-    One of the several implementations of Lempel–Ziv–Welch compression algorithm
-    https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch
+One of the several implementations of Lempel-Ziv-Welch compression algorithm
+https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch
 """
 
 import math
@@ -26,7 +26,7 @@ def read_file_binary(file_path: str) -> str:
 
 
 def add_key_to_lexicon(
-    lexicon: dict, curr_string: str, index: int, last_match_id: str
+    lexicon: dict[str, str], curr_string: str, index: int, last_match_id: str
 ) -> None:
     """
     Adds new strings (curr_string + "0",  curr_string + "1") to the lexicon
@@ -35,15 +35,15 @@ def add_key_to_lexicon(
     lexicon[curr_string + "0"] = last_match_id
 
     if math.log2(index).is_integer():
-        for curr_key in lexicon:
-            lexicon[curr_key] = "0" + lexicon[curr_key]
+        for curr_key, value in lexicon.items():
+            lexicon[curr_key] = f"0{value}"
 
     lexicon[curr_string + "1"] = bin(index)[2:]
 
 
 def compress_data(data_bits: str) -> str:
     """
-    Compresses given data_bits using Lempel–Ziv–Welch compression algorithm
+    Compresses given data_bits using Lempel-Ziv-Welch compression algorithm
     and returns the result as a string
     """
     lexicon = {"0": "0", "1": "1"}
@@ -110,7 +110,7 @@ def write_file_binary(file_path: str, to_write: str) -> None:
         sys.exit()
 
 
-def compress(source_path, destination_path: str) -> None:
+def compress(source_path: str, destination_path: str) -> None:
     """
     Reads source file, compresses it and writes the compressed result in destination
     file

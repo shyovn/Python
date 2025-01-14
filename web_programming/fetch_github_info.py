@@ -17,8 +17,11 @@ with your token::
 #!/usr/bin/env bash
 export USER_TOKEN=""
 """
+
+from __future__ import annotations
+
 import os
-from typing import Any, Dict
+from typing import Any
 
 import requests
 
@@ -31,7 +34,7 @@ AUTHENTICATED_USER_ENDPOINT = BASE_URL + "/user"
 USER_TOKEN = os.environ.get("USER_TOKEN", "")
 
 
-def fetch_github_info(auth_token: str) -> Dict[Any, Any]:
+def fetch_github_info(auth_token: str) -> dict[Any, Any]:
     """
     Fetch GitHub info of a user using the requests module
     """
@@ -39,7 +42,7 @@ def fetch_github_info(auth_token: str) -> Dict[Any, Any]:
         "Authorization": f"token {auth_token}",
         "Accept": "application/vnd.github.v3+json",
     }
-    return requests.get(AUTHENTICATED_USER_ENDPOINT, headers=headers).json()
+    return requests.get(AUTHENTICATED_USER_ENDPOINT, headers=headers, timeout=10).json()
 
 
 if __name__ == "__main__":  # pragma: no cover

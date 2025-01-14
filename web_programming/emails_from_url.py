@@ -1,4 +1,7 @@
 """Get the site emails from URL."""
+
+from __future__ import annotations
+
 __author__ = "Muhammad Umer Farooq"
 __license__ = "MIT"
 __version__ = "1.0.0"
@@ -8,7 +11,6 @@ __status__ = "Alpha"
 
 import re
 from html.parser import HTMLParser
-from typing import Optional
 from urllib import parse
 
 import requests
@@ -20,7 +22,7 @@ class Parser(HTMLParser):
         self.urls: list[str] = []
         self.domain = domain
 
-    def handle_starttag(self, tag: str, attrs: list[tuple[str, Optional[str]]]) -> None:
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         """
         This function parse html to take takes url from tags
         """
@@ -28,12 +30,10 @@ class Parser(HTMLParser):
         if tag == "a":
             # Check the list of defined attributes.
             for name, value in attrs:
-                # If href is defined, and not empty nor # print it.
-                if name == "href" and value != "#" and value != "":
-                    # If not already in urls.
-                    if value not in self.urls:
-                        url = parse.urljoin(self.domain, value)
-                        self.urls.append(url)
+                # If href is defined, not empty nor # print it and not already in urls.
+                if name == "href" and value not in (*self.urls, "", "#"):
+                    url = parse.urljoin(self.domain, value)
+                    self.urls.append(url)
 
 
 # Get main domain name (example.com)
@@ -72,7 +72,7 @@ def emails_from_url(url: str = "https://github.com") -> list[str]:
 
     try:
         # Open URL
-        r = requests.get(url)
+        r = requests.get(url, timeout=10)
 
         # pass the raw HTML to the parser to get links
         parser.feed(r.text)
@@ -83,7 +83,7 @@ def emails_from_url(url: str = "https://github.com") -> list[str]:
             # open URL.
             # read = requests.get(link)
             try:
-                read = requests.get(link)
+                read = requests.get(link, timeout=10)
                 # Get the valid email.
                 emails = re.findall("[a-zA-Z0-9]+@" + domain, read.text)
                 # If not in list then append it.
@@ -92,7 +92,7 @@ def emails_from_url(url: str = "https://github.com") -> list[str]:
             except ValueError:
                 pass
     except ValueError:
-        exit(-1)
+        raise SystemExit(1)
 
     # Finally return a sorted list of email addresses with no duplicates.
     return sorted(valid_emails)
