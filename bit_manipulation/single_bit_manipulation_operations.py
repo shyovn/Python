@@ -8,8 +8,8 @@ def set_bit(number: int, position: int) -> int:
     Set the bit at position to 1.
 
     Details: perform bitwise or for given number and X.
-    Where X is a number with all the bits – zeroes and bit on given
-    position – one.
+    Where X is a number with all the bits - zeroes and bit on given
+    position - one.
 
     >>> set_bit(0b1101, 1) # 0b1111
     15
@@ -26,8 +26,8 @@ def clear_bit(number: int, position: int) -> int:
     Set the bit at position to 0.
 
     Details: perform bitwise and for given number and X.
-    Where X is a number with all the bits – ones and bit on given
-    position – zero.
+    Where X is a number with all the bits - ones and bit on given
+    position - zero.
 
     >>> clear_bit(0b10010, 1) # 0b10000
     16
@@ -42,8 +42,8 @@ def flip_bit(number: int, position: int) -> int:
     Flip the bit at position.
 
     Details: perform bitwise xor for given number and X.
-    Where X is a number with all the bits – zeroes and bit on given
-    position – one.
+    Where X is a number with all the bits - zeroes and bit on given
+    position - one.
 
     >>> flip_bit(0b101, 1) # 0b111
     7
@@ -72,6 +72,26 @@ def is_bit_set(number: int, position: int) -> bool:
     False
     """
     return ((number >> position) & 1) == 1
+
+
+def get_bit(number: int, position: int) -> int:
+    """
+    Get the bit at the given position
+
+    Details: perform bitwise and for the given number and X,
+    Where X is a number with all the bits - zeroes and bit on given position - one.
+    If the result is not equal to 0, then the bit on the given position is 1, else 0.
+
+    >>> get_bit(0b1010, 0)
+    0
+    >>> get_bit(0b1010, 1)
+    1
+    >>> get_bit(0b1010, 2)
+    0
+    >>> get_bit(0b1010, 3)
+    1
+    """
+    return int((number & (1 << position)) != 0)
 
 
 if __name__ == "__main__":
